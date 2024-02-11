@@ -1,0 +1,117 @@
+openapi: '3.0.2'
+info:
+  title: Prices API
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/priceapi
+  description: Local Environment
+tags:
+- name: Price
+paths:
+  /v1/prices:
+    get:
+      summary: get all prices
+      operationId: listPrices
+      description: Fetch all existing prices
+      tags:
+        - Price
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Price'
+  /v1/active-prices/{productId}/{brandId}/{date}:
+    get:
+      summary: get active price given params
+      operationId: activePrice
+      description: Find active price for a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: brandId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date-time
+      tags:
+        - Price
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+components:
+  schemas:
+    Currency:
+      type: string
+      default: 'EURO'
+    PriceFee:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Brand:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Price:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        product:
+          type: object
+          $ref: '#/components/schemas/Product'
+        price:
+          type: number
+          format: float
+        currency:
+          type: string
+          $ref: '#/components/schemas/Currency'
+        brand:
+          type: object
+          $ref: '#/components/schemas/Brand'
+        priceFee:
+          type: object
+          $ref: '#/components/schemas/PriceFee'
+        priority:
+          type: number
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time

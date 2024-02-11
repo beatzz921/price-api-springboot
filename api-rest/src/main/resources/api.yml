@@ -1,0 +1,88 @@
+openapi: '3.0.2'
+info:
+  title: Prices API
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/priceapi
+  description: Local Environment
+tags:
+- name: Price
+paths:
+  /v1/active-prices/{productId}/{brandId}/{date}:
+    get:
+      summary: get active price given params
+      operationId: activePrice
+      description: Find active price for a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: brandId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date-time
+      tags:
+        - Price
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivePrice'
+components:
+  schemas:
+    ActivePrice:
+      type: object
+      properties:
+        brandId:
+          type: integer
+          format: int64
+        productId:
+          type: integer
+          format: int64
+        price:
+          type: number
+          format: float
+        priceListId:
+          type: integer
+          format: int64
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      required:
+        - code
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          description: Code error identifier
+          example: SERVICE_TYPE_NOT_FOUND_ERROR
+          maxLength: 100
+        title:
+          type: string
+          description: Error message
+          example: NOT_FOUND
+          maxLength: 2000
+        detail:
+          type: string
+          description: Error detail
+          example: Error detail
+          maxLength: 5000
+      title: Error
